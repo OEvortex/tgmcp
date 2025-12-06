@@ -6,6 +6,7 @@ This module contains utility functions for error handling, entity formatting, et
 
 import json
 import logging
+import os
 from datetime import datetime
 from typing import Dict, Any
 
@@ -13,6 +14,17 @@ from telethon import utils
 from telethon.tl.types import User, Chat, Channel
 
 from .client import logger
+
+# Setup file logging for errors
+_error_logger = logging.getLogger("telegram_mcp_errors")
+_error_logger.setLevel(logging.ERROR)
+
+# Create file handler for error logging
+_log_file_path = os.path.join(os.path.dirname(__file__), "mcp_errors.log")
+_file_handler = logging.FileHandler(_log_file_path, mode='a', encoding='utf-8')
+_file_handler.setLevel(logging.ERROR)
+_file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+_error_logger.addHandler(_file_handler)
 
 # Error code prefix mapping for better error tracing
 ERROR_PREFIXES = {
@@ -67,8 +79,11 @@ def log_and_format_error(
     # Format the additional context parameters
     context = ", ".join(f"{k}={v}" for k, v in kwargs.items())
 
-    # Log the full technical error
-    logger.exception(f"{function_name} failed ({context}): {error}")
+    # Log the full technical error to file
+    error_message = f"[{error_code}] {function_name} failed: {type(error).__name__}: {str(error)}"
+    if context:
+        error_message += f" | Context: {context}"
+    _error_logger.error(error_message, exc_info=True)
 
     # Return a user-friendly message
     return f"An error occurred (code: {error_code}). Check mcp_errors.log for details."
