@@ -17,6 +17,9 @@
   <a href="https://deepwiki.com/OEvortex/tgmcp">
     <img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki">
   </a>
+  <a href="https://mcpampel.com/repo/oevortex/tgmcp">
+  <img src="https://mcpampel.com/badge/oevortex/tgmcp.svg" alt="MCPAmpel Trust Score">
+</a>
 </div>
 
 ## 📖 Overview
